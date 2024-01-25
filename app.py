@@ -104,39 +104,50 @@ def list_synthesis_jobs(skip: int = 0, top: int = 100):
         logger.error(f'Failed to list batch synthesis jobs: {response.text}')
   
   
-def main():
-    st.title("GTI x AZURE text to avater synthesis demo")
+# def main():
+#     st.title("GTI x AZURE text to avater synthesis demo")
 
-    # Get user input from Streamlit
-    user_input = st.text_input("Enter the text you want to convert to voice:")
+#     # Get user input from Streamlit
+#     user_input = st.text_input("Enter the text you want to convert to voice:")
 
-    if st.button('Submit'):
-        job_id = submit_synthesis(user_input)
-        if job_id is not None:
-            while True:
-                status = get_synthesis(job_id)
-                if status == 'Succeeded':
-                    st.success('Batch avatar synthesis job succeeded')
-                    break
-                elif status == 'Failed':
-                    st.error('Batch avatar synthesis job failed')
-                    break
-                else:
-                    st.info(f'Batch avatar synthesis job is still running, status [{status}]')
-                    time.sleep(5)
+#     if st.button('Submit'):
+#         job_id = submit_synthesis(user_input)
+#         if job_id is not None:
+#             while True:
+#                 status = get_synthesis(job_id)
+#                 if status == 'Succeeded':
+#                     st.success('Batch avatar synthesis job succeeded')
+#                     break
+#                 elif status == 'Failed':
+#                     st.error('Batch avatar synthesis job failed')
+#                     break
+#                 else:
+#                     st.info(f'Batch avatar synthesis job is still running, status [{status}]')
+#                     time.sleep(5)
 
 if __name__ == '__main__':
-    user_input = st.text_input("Enter the text to generate voice speech")
-    if user_input:
-        job_id = submit_synthesis(user_input)
-        if job_id is not None:
-            while True:
-                status, download_url = get_synthesis(job_id)
-                if status == 'Succeeded':
-                    st.markdown(f'[Hi your ai avater is ready, click here to download]({download_url})')
-                    break  # Exit the loop
-                elif status == 'Failed':
-                    st.error('Batch avatar synthesis job failed')
-                    break  # Exit the loop
-                else:
-                    time.sleep(5)
+    # user_input = st.text_input("Enter the text to generate voice speech")
+    st.title("GTI x AZURE text to avater synthesis demo")
+
+    prompts = ["Write a compelling hero banner for our website that highlights our AI-powered solutions.",
+                "Generate a compelling call to action for our website that encourages visitors to try our AI-powered solutions.",
+                "Create a persuasive 'Checkout Now' message for customers who have added our AI-powered solutions to their cart."]
+
+    for i, prompt in enumerate(prompts):
+        text_prompt = st.text_input(f"Text Prompt {i+1}", prompt)
+
+        if text_prompt:
+            job_id = submit_synthesis(text_prompt)
+            if job_id is not None:
+                while True:
+                    status, download_url = get_synthesis(job_id)
+                    if status == 'Succeeded':
+                        st.markdown(f'[Hi your ai avater is ready, click here to download]({download_url})')
+                        break  # Exit the loop
+                    elif status == 'Failed':
+                        st.error('Batch avatar synthesis job failed')
+                        break  # Exit the loop
+                    else:
+                        time.sleep(5)
+    
+        
